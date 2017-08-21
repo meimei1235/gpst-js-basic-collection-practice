@@ -6,20 +6,15 @@ function find(collection, ch) {
             return item;
         }
     }
-
     return null;
 }
 
 function summarize(collection) {
     let result = [];
-    for (let item of collection) {
+    collection.map(item => {
         let obj = find(result, item)
-        if (obj) {
-            obj.count++;
-        } else {
-            result.push({key: item, count: 1});
-        }
-    }
+        obj ? obj.count++ : result.push({key: item, count: 1});
+    });
     return result;
 }
 
@@ -36,42 +31,32 @@ function push(result, key, count) {
 
 function expand(collection) {
     let result = [];
-    for (let item of collection) {
+    collection.map(item => {
         if (item.length === 1) {
             result.push(item);
         } else {
             let {key, count} = split(item);
             push(result, key, count);
         }
-    }
+    });
     return result;
 }
 
-function includes(collection, ch) {
-    for (let item of collection) {
-        if (item === ch) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function discount(collection, promotionItems) {
+function discount(collection, objectB) {
     let result = [];
-    for (let item of collection) {
+    collection.map(item => {
         let key = item.key;
         let count = item.count;
-        if (includes(promotionItems, key)) {
-            count = count - Math.floor(count / 3);
+        if (objectB.value.includes(key)) {
+            count -= Math.floor(count / 3);
         }
         result.push({key, count});
-    }
+    });
     return result;
 }
 
 module.exports = function createUpdatedCollection(collectionA, objectB) {
     let expandedArray = expand(collectionA);
     let summarizedArray = summarize(expandedArray);
-    return discount(summarizedArray, objectB.value);
+    return discount(summarizedArray, objectB);
 }

@@ -1,31 +1,18 @@
 'use strict';
 
-function find(collection, ch) {
-    for (let item of collection) {
-        if (item.key === ch) {
-            return item;
-        }
-    }
-
-    return null;
+function findElem(collection, ch) {
+    return collection.find(elem => {
+        return elem.key === ch;
+    });
 }
 
 function summarize(collection) {
     let result = [];
-    for (let item of collection) {
-        let obj = find(result, item)
-        if (obj) {
-            obj.count++;
-        } else {
-            result.push({key: item, count: 1});
-        }
-    }
+    collection.map(item => {
+        let obj = findElem(result, item);
+        obj ? obj.count++ :  result.push({key: item, count: 1});
+    });
     return result;
-}
-
-function split(item) {
-    let array = item.split("-");
-    return {key: array[0], count: parseInt(array[1], 10)};
 }
 
 function push(result, key, count) {
@@ -36,14 +23,15 @@ function push(result, key, count) {
 
 function expand(collection) {
     let result = [];
-    for (let item of collection) {
+    collection.forEach(item =>{
         if (item.length === 1) {
             result.push(item);
         } else {
-            let {key, count} = split(item);
+            let item_arr = item.split('-');
+            let {key, count} = {key: item_arr[0], count: parseInt(item_arr[1])};
             push(result, key, count);
         }
-    }
+    });
     return result;
 }
 

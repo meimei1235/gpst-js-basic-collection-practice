@@ -6,47 +6,37 @@ function find(collection, ch) {
             return item;
         }
     }
-
+   /*collection.forEach(item => {
+       if (item.key === ch) {
+           return item;
+       }
+   });*/
     return null;
 }
 
 function summarize(collection) {
     let result = [];
-    for (let item of collection) {
-        let obj = find(result, item)
-        if (obj) {
-            obj.count++;
-        } else {
-            result.push({key: item, count: 1});
-        }
-    }
+    collection.map(item => {
+        let obj = find(result, item);
+        obj ? obj.count++ : result.push({key: item, count: 1});
+    });
     return result;
 }
 
-function includes(collection, ch) {
-    for (let item of collection) {
-        if (item === ch) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function discount(collection, promotionItems) {
+function discount(collection, objectB) {
     let result = [];
-    for (let item of collection) {
+    collection.map(item => {
         let key = item.key;
         let count = item.count;
-        if (includes(promotionItems, key)) {
-            count = count - Math.floor(count / 3);
+        if (objectB.value.includes(key)) {
+            count -= Math.floor(count / 3);
         }
         result.push({key, count});
-    }
+    });
     return result;
 }
 
 module.exports = function createUpdatedCollection(collectionA, objectB) {
     let summarized = summarize(collectionA);
-    return discount(summarized, objectB.value);
+    return discount(summarized, objectB);
 }
